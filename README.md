@@ -1,36 +1,76 @@
-IMT2024031 - Polynomial Regression Assignment
+# IMT2024031 - Final Polynomial Regression Submission
 
-Files in this package
----------------------
-IMT2024031_pred_var1.csv          Final predictions for Problem/Phase 1 (var1)
-IMT2024031_pred_var2.csv          Final predictions for Problem/Phase 2 (var2)
-IMT2024031_var1_cv_results.csv    Full 5-fold CV results for degrees 1-10
-IMT2024031_var2_cv_results.csv    Full 5-fold CV results for degrees 1-20
-IMT2024031_var1_cv.png             Degree-selection plot for var1
-IMT2024031_var2_cv.png             Degree-selection plot for var2
-IMT2024031_polynomial_regression.py Reproducible training/CV/prediction code
-requirements.txt              Python dependencies
-README.md                     This file
+## Final selected models
 
-Final model selection
----------------------
-var1: degree 4, 210 polynomial terms
-      5-fold CV MSE = 0.873890
-      5-fold CV R^2 = 0.907736
+| Problem | Regularizer | Degree | Alpha | 5-fold OOF MSE | 5-fold OOF R2 | Non-zero coefficients |
+|---|---|---:|---:|---:|---:|---:|
+| var1 | Lasso (L1) | 5 | 0.00788046 | 0.327877 | 0.965743 | 149 / 461 |
+| var2 | Lasso (L1) | 11 | 0.00045000 | 0.235043 | 0.994675 | 163 / 363 |
 
-var2: degree 8, 165 polynomial terms
-      5-fold CV MSE = 0.251895
-      5-fold CV R^2 = 0.994196
+The final configurations were selected through polynomial-degree and regularization-strength
+cross-validation comparing L1 and L2 regularization. The final fixed models were then
+re-evaluated with 5-fold out-of-fold predictions and refit on all 1000 training samples.
 
-Method
-------
-The final model is ordinary multivariate polynomial regression: polynomial
-feature expansion followed by least-squares linear regression. No Ridge/Lasso,
-neural network, tree model, or other non-polynomial regressor is used.
-The supplied data are already scaled approximately to [-1, 1].
+## Final prediction files
 
-Reproduction
-------------
-1. Place the four assigned CSV files in the same directory as the script.
-2. Install: pip install -r requirements.txt
-3. Run: python IMT2024031_polynomial_regression.py
+- `predictions/IMT2024031_pred_var1.csv`
+- `predictions/IMT2024031_pred_var2.csv`
+
+Each file contains exactly one column named `y` and 1000 predictions.
+
+## Reproducibility
+
+Training/test data are included under `data/`.
+
+Install dependencies:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+Reproduce the final models and prediction files:
+
+```bash
+python3 code/train_final.py
+```
+
+Generate the diagnostic figures:
+
+```bash
+python3 code/plots.py
+```
+
+The expensive degree-by-degree L1/L2 selection experiment is also included:
+
+```bash
+python3 code/model_selection_l1_l2.py
+```
+
+That selection script can take substantially longer for the high-degree models.
+
+## Final diagnostics
+
+The plots in `plots/` include:
+- predicted vs actual out-of-fold predictions
+- coefficient magnitude/rank plots
+- out-of-fold residual plots
+- final model metric summary
+
+## Verification
+
+Selected-degree L1/L2 checks (same five-fold shuffled splits and fold-wise standardization):
+- var1, degree 5: L1 MSE = 0.327877; L2 MSE = 0.513036 -> L1 wins.
+- var2, degree 11: L1 MSE = 0.235043; L2 MSE = 0.236987 -> L1 wins.
+
+A detailed CSV is included at `results/selected_degree_l1_l2_comparison.csv`.
+
+The submitted prediction CSVs were checked against the final training pipeline:
+- var1 maximum absolute prediction difference: approximately `2.1e-14`
+- var2 maximum absolute prediction difference: approximately `1.2e-13`
+
+These are floating-point roundoff differences, so the supplied prediction CSVs match the final model outputs.
+
+## Repository
+
+GitHub repository:
+https://github.com/Heer-create-lgtm/ml_assignment_1
