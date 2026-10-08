@@ -1,3 +1,3 @@
-problem,selected_degree,l1_alpha,l1_cv_mse,l2_alpha,l2_cv_mse,winner
+problem,degree,L1_alpha,L1_cv_mse,L2_alpha,L2_cv_mse,winner
 var1,5,0.007880462815669913,0.3278774124501606,28.072162039411815,0.5130362102095698,L1 (Lasso)
 var2,11,0.00045,0.23504296873727482,1.6102620275609392,0.23698696972423652,L1 (Lasso)
